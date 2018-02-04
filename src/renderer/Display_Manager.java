@@ -9,6 +9,7 @@ import org.lwjgl.opengl.PixelFormat;
 
 public class Display_Manager 
 {
+	//constant screen vars
 	private static final int WIDTH = 1280;
 	private static final int HEIGHT = 720;
 	private static final int FPS = 144;
@@ -19,6 +20,7 @@ public class Display_Manager
 	public static void createDisplay()
 	{
 		try {
+			//set the display attribs
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(new PixelFormat(), attribs);
 		} catch (LWJGLException e) {
@@ -31,12 +33,14 @@ public class Display_Manager
 	
 	public static void updateDisplay()
 	{
+		//update at a ceartain frame rate
 		Display.sync(FPS);
 		Display.update();
 	}
 	
 	public static void closeDisplay()
 	{
+		//destory display
 		Display.destroy();
 	}
 }
