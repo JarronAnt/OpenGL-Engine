@@ -17,18 +17,21 @@ public class MainGameLoop {
 		ModelLoader loader = new ModelLoader();
 		Renderer renderer = new Renderer();
 		
-		//create verts for two triganles that makes a quad
+		//create array of the verts
 		 float[] vertices = {
-				    -0.5f, 0.5f, 0f,
-				    -0.5f, -0.5f, 0f,
-				    0.5f, -0.5f, 0f,
-				    0.5f, -0.5f, 0f,
-				    0.5f, 0.5f, 0f,
-				    -0.5f, 0.5f, 0f
+				   -0.5f,0.5f,0, //V1
+				   -0.5f,-0.5f,0, //V2
+				   0.5f,-0.5f,0, //V3
+				   0.5f,0.5f,0 //V4
 				  };
+		 //array to tell opengl which order to connect verts 
+		 int[] indicies = {
+				 0,1,3, //triangle 1
+				 1,3,2 //triangle 2
+		 };
 		 
 		//create a model by loading the verts into a vao
-		RawModel testModel = loader.loadToVao(vertices);
+		RawModel testModel = loader.loadToVao(vertices, indicies);
 		
 		while(!Display.isCloseRequested()) 
 		{
