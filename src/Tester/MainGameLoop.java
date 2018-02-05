@@ -6,6 +6,7 @@ import renderer.Display_Manager;
 import renderer.ModelLoader;
 import renderer.RawModel;
 import renderer.Renderer;
+import shaders.StaticShader;
 
 public class MainGameLoop {
 
@@ -16,6 +17,8 @@ public class MainGameLoop {
 		//create the loader and renderer object
 		ModelLoader loader = new ModelLoader();
 		Renderer renderer = new Renderer();
+		StaticShader shader = new StaticShader();
+
 		
 		//create array of the verts
 		 float[] vertices = {
@@ -33,19 +36,22 @@ public class MainGameLoop {
 		//create a model by loading the verts into a vao
 		RawModel testModel = loader.loadToVao(vertices, indicies);
 		
+		
 		while(!Display.isCloseRequested()) 
 		{
 			//clear the screen and set the background color 
 			renderer.prep();
-			
+			shader.start();
 			//logic, render and stuff
 			//draw the model
 			renderer.render(testModel);
+			shader.stop();
 			Display_Manager.updateDisplay();
 			
 		}
 		
 		//clean everything up
+		shader.purge();
 		loader.purge();
 		Display_Manager.closeDisplay();
 	}
