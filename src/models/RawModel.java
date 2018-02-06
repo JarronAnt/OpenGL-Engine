@@ -1,4 +1,4 @@
-package renderer;
+package models;
 
 public class RawModel 
 {

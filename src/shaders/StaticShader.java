@@ -13,6 +13,7 @@ public class StaticShader extends ShaderProgram
 	@Override
 	protected void bindAttribs() {
 		super.bindAttrib(0, "pos");
+		super.bindAttrib(1, "texCoords");
 	}
 
 }
