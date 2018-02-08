@@ -1,11 +1,15 @@
 package Tester;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
+import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Display_Manager;
 import renderer.ModelLoader;
+import renderer.ObjLoader;
 import renderer.Renderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
@@ -18,45 +22,28 @@ public class MainGameLoop {
 		Display_Manager.createDisplay();
 		//create the loader and renderer object
 		ModelLoader loader = new ModelLoader();
-		Renderer renderer = new Renderer();
 		StaticShader shader = new StaticShader();
-
+		Renderer renderer = new Renderer(shader);
 		
-		//create array of the verts
-		 float[] vertices = {
-				   -0.5f,0.5f,0, //V1
-				   -0.5f,-0.5f,0, //V2
-				   0.5f,-0.5f,0, //V3
-				   0.5f,0.5f,0 //V4
-				  };
-		 
-		 //array to tell opengl which order to connect verts 
-		 int[] indicies = {
-				 0,1,3, //triangle 1
-				 1,3,2 //triangle 2
-		 };
-		 
-		 //uv coords to attach the texture to the model
-		 float[] textureCoords = {
-				    0,0, //V0
-				    0,1, //V1
-				    1,1, //V2
-				    1,0 //V3
-				  };
-		 
 		//create a model by loading the verts into a vao
-		RawModel testModel = loader.loadToVao(vertices, textureCoords, indicies);
-		ModelTexture tex = new ModelTexture(loader.loadTexture("image"));
+		RawModel testModel = ObjLoader.loadOBJ("stall", loader);
+		ModelTexture tex = new ModelTexture(loader.loadTexture("stallTexture"));
 		TexturedModel texModel = new TexturedModel(testModel, tex);
+		Entity entity = new Entity(texModel, new Vector3f(0,0,-50),0,0,0,1.2f);
+		Camera camera = new Camera();
 		
 		while(!Display.isCloseRequested()) 
 		{
+			
+			entity.modifyRot(0, 1, 0);
+			camera.move();
 			//clear the screen and set the background color 
 			renderer.prep();
 			shader.start();
 			//logic, render and stuff
+			shader.loadViewMatrix(camera);
 			//draw the model
-			renderer.render(texModel);
+			renderer.render(entity, shader);
 			shader.stop();
 			Display_Manager.updateDisplay();
 			

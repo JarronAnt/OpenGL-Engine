@@ -7,6 +7,7 @@ public class TexturedModel
 	private RawModel rawModel; 
 	private ModelTexture texture;
 	
+	//obejct that holds a raw model and a texture for that model
 	public TexturedModel(RawModel model, ModelTexture tex)
 	{
 		this.rawModel = model;

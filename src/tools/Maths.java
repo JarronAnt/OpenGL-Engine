@@ -3,6 +3,8 @@ package tools;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
+
 public class Maths {
 	
 	
@@ -17,5 +19,19 @@ public class Maths {
 		mat.scale(new Vector3f(scale, scale, scale), mat, mat);
 
 		return mat; 
+	}
+	
+	public static Matrix4f createViewMatrix(Camera camera)
+	{
+		Matrix4f viewMat = new Matrix4f();
+		viewMat.setIdentity();
+		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1,0,0), viewMat, viewMat);
+		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0,1,0), viewMat, viewMat);
+		Vector3f camPos = camera.getPos();
+		Vector3f negativeCamPos = new Vector3f(-camPos.x, -camPos.y, -camPos.z);
+		Matrix4f.translate(negativeCamPos, viewMat, viewMat);
+		
+		return viewMat; 
+
 	}
 }
