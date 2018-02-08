@@ -14,7 +14,7 @@ public class StaticShader extends ShaderProgram
 	private int locationProjectionMatrix;
 	private int locationViewMatrix;
 
-	//test
+	//test2
 	public StaticShader() {
 		super(VERT, FRAG);
 	}
