@@ -5,12 +5,14 @@ import models.TexturedModel;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Entity {
-
+	
+	//entity vars
 	private TexturedModel model;
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
-
+	
+	//set the entity vars on creation
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
 		this.model = model;
@@ -21,18 +23,22 @@ public class Entity {
 		this.scale = scale;
 	}
 
+	//change position of the entity
 	public void increasePosition(float dx, float dy, float dz) {
 		this.position.x += dx;
 		this.position.y += dy;
 		this.position.z += dz;
 	}
 
+	//change rotation of the entity
 	public void increaseRotation(float dx, float dy, float dz) {
 		this.rotX += dx;
 		this.rotY += dy;
 		this.rotZ += dz;
 	}
-
+	
+	
+	//getters and setters
 	public TexturedModel getModel() {
 		return model;
 	}

@@ -20,8 +20,10 @@ import entities.Entity;
 
 public class EntityRenderer {
 
+	//create a shader program for entites
 	private StaticShader shader;
-
+	
+	//set vars
 	public EntityRenderer(StaticShader shader,Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
@@ -29,6 +31,7 @@ public class EntityRenderer {
 		shader.stop();
 	}
 
+	//go through the map and batch render them
 	public void render(Map<TexturedModel, List<Entity>> entities) {
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
@@ -41,7 +44,8 @@ public class EntityRenderer {
 			unbindTexturedModel();
 		}
 	}
-
+	
+	//to all the vao setup for the entities
 	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -49,18 +53,25 @@ public class EntityRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		ModelTexture texture = model.getTexture();
+		if(texture.isHasTransparency()){
+			MasterRenderer.disableCulling();
+		}
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		shader.loadFakeLightingVar(texture.isUseFakeLight());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 	}
-
+	
+	//unbind everything
 	private void unbindTexturedModel() {
+		MasterRenderer.enableCulling();
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
-
+	
+	//create the transformation matrix for the entites
 	private void prepareInstance(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());

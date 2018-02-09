@@ -21,10 +21,12 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public class Loader {
 	
+	//list of vaos, vbos and textures
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 	
+	//load a models vaos
 	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices){
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
@@ -35,6 +37,7 @@ public class Loader {
 		return new RawModel(vaoID,indices.length);
 	}
 	
+	//load a models textures
 	public int loadTexture(String fileName) {
 		Texture texture = null;
 		try {
