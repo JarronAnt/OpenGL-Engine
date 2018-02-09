@@ -1,26 +1,23 @@
 package models;
 
-public class RawModel 
-{
-	private int vaoID, vertexCount;
+public class RawModel {
 	
-	//raw model object holds a vao and vertex count of the model
-	public RawModel (int vaoID, int vertexCount) 
-	{
+	private int vaoID;
+	private int vertexCount;
+	
+	public RawModel(int vaoID, int vertexCount){
 		this.vaoID = vaoID;
 		this.vertexCount = vertexCount;
-		
 	}
 
-	public int getVaoID() 
-	{
+	public int getVaoID() {
 		return vaoID;
 	}
 
-	public int getVertexCount()
-	{
+	public int getVertexCount() {
 		return vertexCount;
 	}
 	
 	
+
 }

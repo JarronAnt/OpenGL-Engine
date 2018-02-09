@@ -3,31 +3,30 @@ package entities;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Light {
-	private Vector3f pos;
-	private Vector3f col;
 	
-	public Light(Vector3f pos, Vector3f col) {
-		this.pos = pos;
-		this.col = col;
+	private Vector3f position;
+	private Vector3f colour;
+	
+	public Light(Vector3f position, Vector3f colour) {
+		this.position = position;
+		this.colour = colour;
 	}
 
-	public Vector3f getPos() {
-		return pos;
+	public Vector3f getPosition() {
+		return position;
 	}
 
-	public void setPos(Vector3f pos) {
-		this.pos = pos;
+	public void setPosition(Vector3f position) {
+		this.position = position;
 	}
 
-	public Vector3f getCol() {
-		return col;
+	public Vector3f getColour() {
+		return colour;
 	}
 
-	public void setCol(Vector3f col) {
-		this.col = col;
+	public void setColour(Vector3f colour) {
+		this.colour = colour;
 	}
 	
-	
-	
-	
+
 }
