@@ -39,7 +39,7 @@ public class MainGameLoop {
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) 
 		{
-			
+			//added batch rendering
 			entity.modifyRot(0, 1, 0);
 			camera.move();
 			//clear the screen and set the background color 
