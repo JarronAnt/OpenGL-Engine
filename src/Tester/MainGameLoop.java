@@ -9,10 +9,9 @@ import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Display_Manager;
+import renderer.MasterRenderer;
 import renderer.ModelLoader;
 import renderer.ObjLoader;
-import renderer.Renderer;
-import shaders.StaticShader;
 import textures.ModelTexture;
 
 public class MainGameLoop {
@@ -23,38 +22,37 @@ public class MainGameLoop {
 		Display_Manager.createDisplay();
 		//create the loader and renderer object
 		ModelLoader loader = new ModelLoader();
-		StaticShader shader = new StaticShader();
-		Renderer renderer = new Renderer(shader);
+	
 		
 		//create a model by loading the verts into a vao
 		RawModel testModel = ObjLoader.loadOBJ("dragon", loader);
-		ModelTexture tex = new ModelTexture(loader.loadTexture("whiteTex"));
-		TexturedModel texModel = new TexturedModel(testModel, tex);
+		TexturedModel texModel = new TexturedModel(testModel, new ModelTexture(loader.loadTexture("whiteTex")));
 		Entity entity = new Entity(texModel, new Vector3f(0,-5,-25),0,0,0,1.0f);
 		
 		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1.0f, 1.0f, 1.0f));
 		Camera camera = new Camera();
 		
+		ModelTexture texture = texModel.getTexture();
+		texture.setShineDamper(10);
+		texture.setReflectivity(1);
+		
+		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) 
 		{
 			
 			entity.modifyRot(0, 1, 0);
 			camera.move();
 			//clear the screen and set the background color 
-			renderer.prep();
-			shader.start();
-			//logic, render and stuff
-			shader.loadLight(light);
-			shader.loadViewMatrix(camera);
-			//draw the model
-			renderer.render(entity, shader);
-			shader.stop();
+			renderer.processEntity(entity);
+			
+			renderer.render(light, camera);
 			Display_Manager.updateDisplay();
 			
 		}
 		
 		//clean everything up
-		shader.purge();
+		
+		renderer.purge();
 		loader.purge();
 		Display_Manager.closeDisplay();
 	}

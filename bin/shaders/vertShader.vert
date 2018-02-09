@@ -8,6 +8,8 @@ in vec3 normal;
 out vec2 pass_tex_coords;
 out vec3 surfaceNormal;
 out vec3 toLightVector;
+out vec3 toCamVec; 
+
 
 uniform mat4 transformMatrix; 
 uniform mat4 projectionMatrix;
@@ -24,4 +26,5 @@ void main(void)
 	
 	surfaceNormal = (transformMatrix * vec4(normal,0.0)).xyz;
 	toLightVector = lightPos - worldPos.xyz;
+	toCamVec = (inverse(viewMatrix) * vec4(0,0,0,1.0)).xyz - worldPos.xyz;
 }
