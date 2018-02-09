@@ -117,7 +117,7 @@ public class ObjLoader {
 			
 		}
 
-		return loader.loadToVao(vertsArray, texsArray, indexArray);
+		return loader.loadToVao(vertsArray, texsArray, normsArray, indexArray);
 	}
 	
 	private static void processVert(String[] vertData, List<Integer> indicies, 

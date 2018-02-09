@@ -3,6 +3,7 @@ package shaders;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
+import entities.Light;
 import tools.Maths;
 
 public class StaticShader extends ShaderProgram
@@ -13,6 +14,8 @@ public class StaticShader extends ShaderProgram
 	private int locationTransMatrix;
 	private int locationProjectionMatrix;
 	private int locationViewMatrix;
+	private int locationLightCol;
+	private int locationLightPos;
 
 	//test2
 	public StaticShader() {
@@ -24,6 +27,7 @@ public class StaticShader extends ShaderProgram
 		//take the attribs in cetain vao slot and pass to the vert shader
 		super.bindAttrib(0, "pos");
 		super.bindAttrib(1, "texCoords");
+		super.bindAttrib(2, "normal");
 	}
 
 	@Override
@@ -32,11 +36,18 @@ public class StaticShader extends ShaderProgram
 		locationTransMatrix = super.getUniformLocation("transformMatrix");
 		locationProjectionMatrix = super.getUniformLocation("projectionMatrix");
 		locationViewMatrix = super.getUniformLocation("viewMatrix");
+		locationLightPos = super.getUniformLocation("lightPos");
+		locationLightCol = super.getUniformLocation("lightCol");
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix )
 	{
 		super.loadMatrix(locationTransMatrix, matrix);
+	}
+	
+	public void loadLight(Light light){
+		super.loadVector(locationLightPos, light.getPos());
+		super.loadVector(locationLightCol, light.getCol());
 	}
 	
 	public void loadViewMatrix(Camera camera )

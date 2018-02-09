@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
+import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Display_Manager;
@@ -29,7 +30,9 @@ public class MainGameLoop {
 		RawModel testModel = ObjLoader.loadOBJ("dragon", loader);
 		ModelTexture tex = new ModelTexture(loader.loadTexture("whiteTex"));
 		TexturedModel texModel = new TexturedModel(testModel, tex);
-		Entity entity = new Entity(texModel, new Vector3f(0,0,-50),0,0,0,1.2f);
+		Entity entity = new Entity(texModel, new Vector3f(0,-5,-25),0,0,0,1.0f);
+		
+		Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1.0f, 1.0f, 1.0f));
 		Camera camera = new Camera();
 		
 		while(!Display.isCloseRequested()) 
@@ -41,6 +44,7 @@ public class MainGameLoop {
 			renderer.prep();
 			shader.start();
 			//logic, render and stuff
+			shader.loadLight(light);
 			shader.loadViewMatrix(camera);
 			//draw the model
 			renderer.render(entity, shader);

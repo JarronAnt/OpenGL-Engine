@@ -26,7 +26,7 @@ public class ModelLoader
 	private List<Integer> texs = new ArrayList<Integer>();
 
 	
-	public RawModel loadToVao(float[] pos,float[] texCoords, int[] index )
+	public RawModel loadToVao(float[] pos,float[] texCoords, float[] normals, int[] index )
 	{
 		//create a vao and add it to a list
 		int vaoID = createVAO();
@@ -37,6 +37,9 @@ public class ModelLoader
 		storeDataInAttribList(0, 3, pos);
 		//store UV coords into index 1 of the vao
 		storeDataInAttribList(1, 2, texCoords);
+		//store models normals into vao slot #2
+		storeDataInAttribList(2, 3, normals);
+
 
 		//deactivate the vao
 		unbindVAO();

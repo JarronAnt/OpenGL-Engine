@@ -2,15 +2,26 @@
 
 in vec3 pos; 
 in vec2 texCoords;
+in vec3 normal;
+
 
 out vec2 pass_tex_coords;
+out vec3 surfaceNormal;
+out vec3 toLightVector;
 
 uniform mat4 transformMatrix; 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
+uniform vec3 lightPos;
+
 
 void main(void)
 {
-	gl_Position =  projectionMatrix * viewMatrix *  transformMatrix * vec4(pos.xyz,1.0);
+
+	vec4 worldPos =   transformMatrix * vec4(pos.xyz,1.0);
+	gl_Position =  projectionMatrix * viewMatrix * worldPos;
 	pass_tex_coords = texCoords; 
+	
+	surfaceNormal = (transformMatrix * vec4(normal,0.0)).xyz;
+	toLightVector = lightPos - worldPos.xyz;
 }

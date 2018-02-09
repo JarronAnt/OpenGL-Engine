@@ -46,6 +46,7 @@ public class Renderer
 		//activate a specific slot in the vao
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
 		Matrix4f transformationMatrix = Maths.createTransformation(entity.getPos(), entity.getRotX(), 
 				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		
@@ -57,6 +58,7 @@ public class Renderer
 		//deactivate everything
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
 		//bind the vaos 
 		GL30.glBindVertexArray(0);
 	}
