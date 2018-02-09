@@ -26,8 +26,8 @@ public class MainGameLoop {
 		Renderer renderer = new Renderer(shader);
 		
 		//create a model by loading the verts into a vao
-		RawModel testModel = ObjLoader.loadOBJ("stall", loader);
-		ModelTexture tex = new ModelTexture(loader.loadTexture("stallTexture"));
+		RawModel testModel = ObjLoader.loadOBJ("dragon", loader);
+		ModelTexture tex = new ModelTexture(loader.loadTexture("whiteTex"));
 		TexturedModel texModel = new TexturedModel(testModel, tex);
 		Entity entity = new Entity(texModel, new Vector3f(0,0,-50),0,0,0,1.2f);
 		Camera camera = new Camera();
