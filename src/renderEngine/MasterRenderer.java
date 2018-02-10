@@ -25,8 +25,8 @@ public class MasterRenderer {
 	private static final float FAR_PLANE = 1000;
 	
 	private static final float R = 0.5f;
-	private static final float G = 0.5f;
-	private static final float B = 0.5f;
+	private static final float G = 0.8f;
+	private static final float B = 0.9f;
 	private static final float A = 1.0f;
 
 	

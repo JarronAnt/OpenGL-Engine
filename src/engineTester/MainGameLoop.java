@@ -4,21 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import models.RawModel;
-import models.TexturedModel;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import models.RawModel;
+import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
 
 public class MainGameLoop {
 
@@ -28,13 +29,20 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
+		//create model data here
+		ModelData treeData = OBJFileLoader.loadOBJ("tree");
+		ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
+		ModelData fernData = OBJFileLoader.loadOBJ("fern");
 		
-		//load the models in as a raw model
-		RawModel model = OBJLoader.loadObjModel("tree", loader);
-		RawModel model2 = OBJLoader.loadObjModel("grassModel",loader);
-		RawModel model3 = OBJLoader.loadObjModel("fern",loader);
+		//create raw models here
+		RawModel model = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(),
+				treeData.getNormals(), treeData.getIndices());
+		RawModel model2 = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(),
+				grassData.getNormals(), grassData.getIndices());
+		RawModel model3 = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(),
+				treeData.getNormals(), fernData.getIndices());
 		
-		//create texture model using raw models and a texture
+		//create textured models here
 		TexturedModel tree = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel grass = new TexturedModel(model2, new ModelTexture(loader.loadTexture("grassTexture")));
 		TexturedModel fern = new TexturedModel(model3, new ModelTexture(loader.loadTexture("fern")));
