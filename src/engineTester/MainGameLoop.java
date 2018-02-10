@@ -39,11 +39,13 @@ public class MainGameLoop {
 		TexturedModel grass = new TexturedModel(model2, new ModelTexture(loader.loadTexture("grassTexture")));
 		TexturedModel fern = new TexturedModel(model3, new ModelTexture(loader.loadTexture("fern")));
 		
-		//set transparancy 
+		//set transparancy here
 		grass.getTexture().setHasTransparency(true);
 		fern.getTexture().setHasTransparency(true);
 		
-		//set fake lighting
+		//set specular values here
+		
+		//set fake lighting here
 		grass.getTexture().setUseFakeLight(true);
 		
 		//create a list of entities 
