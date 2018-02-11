@@ -17,9 +17,10 @@ import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TexturePack;
+import textures.Textures;
 
 public class MainGameLoop {
 
@@ -28,6 +29,16 @@ public class MainGameLoop {
 		//create the display and loader
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
+		
+		//terrain textures go here
+		Textures bg = new Textures(loader.loadTexture("grass"));
+		Textures r = new Textures(loader.loadTexture("dirt"));
+		Textures g = new Textures(loader.loadTexture("pinkFlowers"));
+		Textures b = new Textures(loader.loadTexture("path"));
+		Textures blend = new Textures(loader.loadTexture("blendMap"));
+		
+		TexturePack tp = new TexturePack(bg,r,g,b);
+
 		
 		//create model data here
 		ModelData treeData = OBJFileLoader.loadOBJ("tree");
@@ -72,8 +83,8 @@ public class MainGameLoop {
 		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
 		
 		//generate two terrain tiles
-		Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(1,-1,loader,new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain = new Terrain(0,-1,loader,tp,blend);
+		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend);
 		
 		//create a camera and renderer
 		Camera camera = new Camera();	
