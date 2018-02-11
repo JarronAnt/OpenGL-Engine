@@ -20,6 +20,7 @@ import entities.Light;
 
 public class MasterRenderer {
 	
+	//consts
 	private static final float FOV = 70;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
@@ -30,6 +31,7 @@ public class MasterRenderer {
 	private static final float A = 1.0f;
 
 	
+	//create needed objects
 	private Matrix4f projectionMatrix;
 	
 	private StaticShader shader = new StaticShader();
@@ -38,9 +40,10 @@ public class MasterRenderer {
 	private TerrainRenderer terrainRenderer;
 	private TerrainShader terrainShader = new TerrainShader();
 	
-	
+	//map and lists of models and terrains
 	private Map<TexturedModel,List<Entity>> entities = new HashMap<TexturedModel,List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
+	
 	
 	public MasterRenderer(){
 		enableCulling();
@@ -49,15 +52,18 @@ public class MasterRenderer {
 		terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix);
 	}
 	
+	//allow backface culling
 	public static void enableCulling(){
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
 	}
 	
+	//disable backface culling
 	public static void disableCulling(){
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
+	//render everything that needs to be rendered
 	public void render(Light sun,Camera camera){
 		prepare();
 		shader.start();
@@ -75,10 +81,12 @@ public class MasterRenderer {
 		entities.clear();
 	}
 	
+	//add terrains to a list
 	public void processTerrain(Terrain terrain){
 		terrains.add(terrain);
 	}
 	
+	//add entities to be batch rendered
 	public void processEntity(Entity entity){
 		TexturedModel entityModel = entity.getModel();
 		List<Entity> batch = entities.get(entityModel);
@@ -91,6 +99,7 @@ public class MasterRenderer {
 		}
 	}
 	
+	//clean 
 	public void cleanUp(){
 		shader.cleanUp();
 		terrainShader.cleanUp();
@@ -102,6 +111,7 @@ public class MasterRenderer {
 		GL11.glClearColor(R, G, B, A);
 	}
 	
+	//generate a projection matrix 
 	private void createProjectionMatrix() {
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);

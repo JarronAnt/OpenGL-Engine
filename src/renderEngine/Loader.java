@@ -52,6 +52,7 @@ public class Loader {
 		return texture.getTextureID();
 	}
 	
+	//delete vaos vbos and textured
 	public void cleanUp(){
 		for(int vao:vaos){
 			GL30.glDeleteVertexArrays(vao);
@@ -64,6 +65,7 @@ public class Loader {
 		}
 	}
 	
+	//create our vaoo
 	private int createVAO(){
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);
@@ -71,6 +73,7 @@ public class Loader {
 		return vaoID;
 	}
 	
+	//func to store data in a vao slot
 	private void storeDataInAttributeList(int attributeNumber, int coordinateSize,float[] data){
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
