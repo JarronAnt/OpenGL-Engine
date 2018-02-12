@@ -91,8 +91,8 @@ public class MainGameLoop {
 		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
 		
 		//generate two terrain tiles
-		Terrain terrain = new Terrain(0,-1,loader,tp,blend);
-		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend);
+		Terrain terrain = new Terrain(0,-1,loader,tp,blend,"heightmap");
+		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend, "heightmap");
 		
 		//create a camera and renderer
 		Camera camera = new Camera(myPlayer);	
