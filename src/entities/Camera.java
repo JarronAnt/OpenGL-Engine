@@ -74,6 +74,12 @@ public class Camera {
 
 		float zoomLvl = Mouse.getDWheel() * 0.1f;
 		zoom -= zoomLvl;
+		if(zoom < 10 )
+		{
+			zoom = 10;
+		}else if( zoom > 70){
+			zoom = 70;
+		}
 		System.out.println(zoom);
 		
 
