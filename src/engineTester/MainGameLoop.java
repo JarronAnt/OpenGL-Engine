@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
@@ -44,6 +45,7 @@ public class MainGameLoop {
 		ModelData treeData = OBJFileLoader.loadOBJ("tree");
 		ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
 		ModelData fernData = OBJFileLoader.loadOBJ("fern");
+		ModelData playerData = OBJFileLoader.loadOBJ("person");
 		
 		//create raw models here
 		RawModel model = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(),
@@ -52,11 +54,16 @@ public class MainGameLoop {
 				grassData.getNormals(), grassData.getIndices());
 		RawModel model3 = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(),
 				treeData.getNormals(), fernData.getIndices());
+		RawModel playerModel = loader.loadToVAO(playerData.getVertices(), playerData.getTextureCoords(),
+				playerData.getNormals(), playerData.getIndices());
+
 		
 		//create textured models here
 		TexturedModel tree = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel grass = new TexturedModel(model2, new ModelTexture(loader.loadTexture("grassTexture")));
 		TexturedModel fern = new TexturedModel(model3, new ModelTexture(loader.loadTexture("fern")));
+		TexturedModel player = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
+		
 		
 		//set transparancy here
 		grass.getTexture().setHasTransparency(true);
@@ -68,6 +75,7 @@ public class MainGameLoop {
 		grass.getTexture().setUseFakeLight(true);
 		
 		//create a list of entities 
+		Player myPlayer = new Player(player, new Vector3f(100,0,-50),0,180,0,0.6f);
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
 		//populate the list of entites
@@ -87,17 +95,19 @@ public class MainGameLoop {
 		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend);
 		
 		//create a camera and renderer
-		Camera camera = new Camera();	
+		Camera camera = new Camera(myPlayer);	
 		MasterRenderer renderer = new MasterRenderer();
 		
 		//main game loop
 		while(!Display.isCloseRequested()){
 			//pull for cam movement
 			camera.move();
-			
+			myPlayer.move();
 			//process the terrain
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
+			//processPlayer
+			renderer.processEntity(myPlayer);
 			//process each entity in the list
 			for(Entity entity:entities){
 				renderer.processEntity(entity);
