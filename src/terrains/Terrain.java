@@ -6,12 +6,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
 import renderEngine.Loader;
 import textures.TexturePack;
 import textures.Textures;
+import toolbox.Maths;
 
 public class Terrain {
 	
@@ -27,6 +29,8 @@ public class Terrain {
 	private RawModel model;
 	private TexturePack terrainPack;
 	private Textures blendMap;
+	
+	private float[][] heights;
 	
 	public Terrain(int gridX, int gridZ, Loader loader, TexturePack terrainPack, 
 			Textures blendMap, String heightMap){
@@ -66,7 +70,37 @@ public class Terrain {
 		return blendMap;
 	}
 
-
+	public float getHeightOfTerrain(float worldX, float worldZ){
+		
+		//find which grid square we are in
+		float terrainX = worldX - this.x;
+		float terrainZ = worldZ - this.z;
+		float gridSquares = SIZE / ((float)heights.length-1);
+		int gridX = (int) Math.floor(terrainX/gridSquares);
+		int gridZ = (int) Math.floor(terrainZ/gridSquares);
+		if(gridX >= heights.length - 1 || gridZ >= heights.length -1 || gridZ < 0 || gridX < 0){
+			return 0;
+		}
+		
+		//find the x,z coord in the grid square 
+		float xCoord = (terrainX % gridSquares)/gridSquares;
+		float zCoord = (terrainZ % gridSquares)/gridSquares;
+		
+		float answer;
+		
+		//find which of the two trinangles in the square we are in
+		if(xCoord <= (1-zCoord)){
+			answer = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), new Vector3f(1,
+							heights[gridX + 1][gridZ], 0), new Vector3f(0,
+							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
+		}else{
+			answer = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(1,
+							heights[gridX + 1][gridZ + 1], 1), new Vector3f(0,
+							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
+		}
+		
+		return answer;
+	}
 
 	private RawModel generateTerrain(Loader loader, String heightMap){
 		
@@ -78,6 +112,8 @@ public class Terrain {
 		}
 		
 		int VERTEX_COUNT = hm.getHeight();
+		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
+		
 		
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
@@ -88,7 +124,9 @@ public class Terrain {
 		for(int i=0;i<VERTEX_COUNT;i++){
 			for(int j=0;j<VERTEX_COUNT;j++){
 				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
-				vertices[vertexPointer*3+1] = getHeight(j, i, hm);
+				float height = getHeight(j, i, hm);
+				heights[j][i] = height;
+				vertices[vertexPointer*3+1] = height;
 				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
 				Vector3f normal = calcNormals(j,i,hm);
 				normals[vertexPointer*3] = normal.x;
@@ -121,7 +159,8 @@ public class Terrain {
 		/*if(x<0 || x >= image.getHeight() || y<0 || y >= image.getHeight()){
 			return 0;
 		}*/
-		
+			
+		//better code for normals and lighting( need to test with connecting terrain tho)
 		  if(x<0){
 			  x=0;}
 		  

@@ -80,7 +80,6 @@ public class Camera {
 		}else if( zoom > 70){
 			zoom = 70;
 		}
-		System.out.println(zoom);
 		
 
 	}

@@ -64,6 +64,7 @@ public class MainGameLoop {
 		TexturedModel fern = new TexturedModel(model3, new ModelTexture(loader.loadTexture("fern")));
 		TexturedModel player = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
 		
+		float entityY = 0;
 		
 		//set transparancy here
 		grass.getTexture().setHasTransparency(true);
@@ -78,21 +79,33 @@ public class MainGameLoop {
 		Player myPlayer = new Player(player, new Vector3f(100,0,-50),0,180,0,0.6f);
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
+		Terrain terrain = new Terrain(0,-1,loader,tp,blend,"heightmap");
+		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend, "heightMap");
+		
+		
 		//populate the list of entites
 		for(int i=0;i<300;i++){
-			entities.add(new Entity(tree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
-			entities.add(new Entity(grass, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
-			entities.add(new Entity(fern, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.6f));
-
 			
-		}
+			float x = random.nextFloat()*1600 - 400;
+			float z = random.nextFloat() * -600;
+			
+			if(x > 800 || z > 800){
+				entityY = terrain2.getHeightOfTerrain(x, z);
+			}else{
+				entityY = terrain.getHeightOfTerrain(x, z);
+			}
+			
+			
+			entities.add(new Entity(tree, new Vector3f(x,entityY,z),0,0,0,3));
+			entities.add(new Entity(grass, new Vector3f(x,entityY,z),0,0,0,1));
+			entities.add(new Entity(fern, new Vector3f(x,entityY,z),0,0,0,0.6f));
+			}
 		
 		//create a light source
 		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
 		
 		//generate two terrain tiles
-		Terrain terrain = new Terrain(0,-1,loader,tp,blend,"heightmap");
-		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend, "heightmap");
+
 		
 		//create a camera and renderer
 		Camera camera = new Camera(myPlayer);	
@@ -102,7 +115,12 @@ public class MainGameLoop {
 		while(!Display.isCloseRequested()){
 			//pull for cam movement
 			camera.move();
-			myPlayer.move();
+			
+			if(myPlayer.getPosition().x > 800 || myPlayer.getPosition().z > 800){
+				myPlayer.move(terrain2);
+			}else{
+				myPlayer.move(terrain);	
+			}
 			//process the terrain
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
@@ -125,3 +143,4 @@ public class MainGameLoop {
 	}
 
 }
+
