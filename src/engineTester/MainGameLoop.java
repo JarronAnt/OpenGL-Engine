@@ -39,19 +39,18 @@ public class MainGameLoop {
 		Textures blend = new Textures(loader.loadTexture("blendMap"));
 		
 		TexturePack tp = new TexturePack(bg,r,g,b);
-
+		
+		ModelTexture fernTexAtlas = new ModelTexture(loader.loadTexture("fern"));
+		fernTexAtlas.setNumRows(2);
 		
 		//create model data here
 		ModelData treeData = OBJFileLoader.loadOBJ("tree");
-		ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
 		ModelData fernData = OBJFileLoader.loadOBJ("fern");
 		ModelData playerData = OBJFileLoader.loadOBJ("person");
 		
 		//create raw models here
 		RawModel model = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(),
 				treeData.getNormals(), treeData.getIndices());
-		RawModel model2 = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(),
-				grassData.getNormals(), grassData.getIndices());
 		RawModel model3 = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(),
 				treeData.getNormals(), fernData.getIndices());
 		RawModel playerModel = loader.loadToVAO(playerData.getVertices(), playerData.getTextureCoords(),
@@ -60,20 +59,19 @@ public class MainGameLoop {
 		
 		//create textured models here
 		TexturedModel tree = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
-		TexturedModel grass = new TexturedModel(model2, new ModelTexture(loader.loadTexture("grassTexture")));
-		TexturedModel fern = new TexturedModel(model3, new ModelTexture(loader.loadTexture("fern")));
+		TexturedModel fern = new TexturedModel(model3, fernTexAtlas);
 		TexturedModel player = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
 		
 		float entityY = 0;
 		
 		//set transparancy here
-		grass.getTexture().setHasTransparency(true);
+		//grass.getTexture().setHasTransparency(true);
 		fern.getTexture().setHasTransparency(true);
 		
 		//set specular values here
 		
 		//set fake lighting here
-		grass.getTexture().setUseFakeLight(true);
+		//grass.getTexture().setUseFakeLight(true);
 		
 		//create a list of entities 
 		Player myPlayer = new Player(player, new Vector3f(100,0,-50),0,180,0,0.6f);
@@ -97,8 +95,21 @@ public class MainGameLoop {
 			
 			
 			entities.add(new Entity(tree, new Vector3f(x,entityY,z),0,0,0,3));
-			entities.add(new Entity(grass, new Vector3f(x,entityY,z),0,0,0,1));
-			entities.add(new Entity(fern, new Vector3f(x,entityY,z),0,0,0,0.6f));
+			}
+		
+		
+		for(int i=0;i<300;i++){
+			
+			float x = random.nextFloat()*1600 - 400;
+			float z = random.nextFloat() * -600;
+			
+			if(x > 800 || z > 800){
+				entityY = terrain2.getHeightOfTerrain(x, z);
+			}else{
+				entityY = terrain.getHeightOfTerrain(x, z);
+			}
+			
+			entities.add(new Entity(fern, new Vector3f(x,entityY,z),0,0,0,0.6f,random.nextInt(4)));
 			}
 		
 		//create a light source
@@ -116,6 +127,7 @@ public class MainGameLoop {
 			//pull for cam movement
 			camera.move();
 			
+			//check which terrain the player is in an calc collision based on that
 			if(myPlayer.getPosition().x > 800 || myPlayer.getPosition().z > 800){
 				myPlayer.move(terrain2);
 			}else{

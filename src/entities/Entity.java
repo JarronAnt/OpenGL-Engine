@@ -12,6 +12,8 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	
+	private int textureIndex = 0;
+	
 	//set the entity vars on creation
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
@@ -21,6 +23,27 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+	}
+	
+	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
+			float scale, int index) {
+		this.model = model;
+		this.position = position;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+		this.textureIndex = index;
+	}
+	
+	public float getTexXOffset(){
+		int column = textureIndex % model.getTexture().getNumRows();
+		return (float)column/(float)model.getTexture().getNumRows();
+	}
+	
+	public float getTexYOffset(){
+		int row = textureIndex / model.getTexture().getNumRows();
+		return (float)row/(float)model.getTexture().getNumRows();
 	}
 
 	//change position of the entity

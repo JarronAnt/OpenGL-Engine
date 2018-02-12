@@ -10,6 +10,8 @@ public class ModelTexture {
 	private boolean hasTransparency = false;
 	private boolean useFakeLight = false;
 	
+	private int numRows = 1;
+	
 	public ModelTexture(int texture){
 		this.textureID = texture;
 	}
@@ -19,6 +21,15 @@ public class ModelTexture {
 	}
 	
 	
+	
+
+	public int getNumRows() {
+		return numRows;
+	}
+
+	public void setNumRows(int numRows) {
+		this.numRows = numRows;
+	}
 
 	public boolean isUseFakeLight() {
 		return useFakeLight;
