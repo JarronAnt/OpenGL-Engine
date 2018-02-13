@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
@@ -40,6 +43,7 @@ public class MainGameLoop {
 		
 		TexturePack tp = new TexturePack(bg,r,g,b);
 		
+		//create the textures here
 		ModelTexture fernTexAtlas = new ModelTexture(loader.loadTexture("fern"));
 		fernTexAtlas.setNumRows(2);
 		
@@ -122,6 +126,14 @@ public class MainGameLoop {
 		Camera camera = new Camera(myPlayer);	
 		MasterRenderer renderer = new MasterRenderer();
 		
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		//create guis here
+		GuiTexture gui1 = new GuiTexture(loader.loadTexture("health"),new Vector2f(-0.5f,0.5f),
+				new Vector2f(0.25f,0.25f));
+		guis.add(gui1);
+		
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
+		
 		//main game loop
 		while(!Display.isCloseRequested()){
 			//pull for cam movement
@@ -144,10 +156,12 @@ public class MainGameLoop {
 			}
 			//render everything
 			renderer.render(light, camera);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		
 		//clean
+		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
