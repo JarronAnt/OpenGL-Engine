@@ -2,7 +2,7 @@
 
 in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
-in vec3 toLightVector;
+in vec3 toLightVector[4];
 in vec3 toCameraVector;
 
 out vec4 out_Color;
@@ -14,7 +14,7 @@ uniform sampler2D bTex;
 uniform sampler2D blendMap;
 
 
-uniform vec3 lightColour;
+uniform vec3 lightColour[4];
 uniform float shineDamper;
 uniform float reflectivity;
 
@@ -29,29 +29,30 @@ void main(void){
 	vec4 gTexCol = texture(gTex, tiledCoords) * blendMapCol.g;
 	vec4 bTexCol = texture(bTex, tiledCoords) * blendMapCol.b;
 	
-	vec4 totalCol = bgTexCol + rTexCol + gTexCol + bTexCol;
-	
-	
-	
-	
-
-	vec3 unitNormal = normalize(surfaceNormal);
-	vec3 unitLightVector = normalize(toLightVector);
-	
-	float nDotl = dot(unitNormal,unitLightVector);
-	float brightness = max(nDotl,0.2);
-	vec3 diffuse = brightness * lightColour;
-	
 	vec3 unitVectorToCamera = normalize(toCameraVector);
-	vec3 lightDirection = -unitLightVector;
-	vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
 	
-	float specularFactor = dot(reflectedLightDirection , unitVectorToCamera);
-	specularFactor = max(specularFactor,0.0);
-	float dampedFactor = pow(specularFactor,shineDamper);
-	vec3 finalSpecular = dampedFactor * reflectivity * lightColour;
 	
+	vec4 totalCol = bgTexCol + rTexCol + gTexCol + bTexCol;
+	vec3 unitNormal = normalize(surfaceNormal);
+	
+	vec3 totalDiffuse = vec3(0.0);
+	vec3 totalSpecular = vec3(0.0);
+	
+	for(int i = 0; i < 4; i++){
+		vec3 unitLightVector = normalize(toLightVector[i]);
+		float nDotl = dot(unitNormal,unitLightVector);
+		float brightness = max(nDotl,0.2);
+		vec3 lightDirection = -unitLightVector;
+		vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
+		float specularFactor = dot(reflectedLightDirection , unitVectorToCamera);
+		specularFactor = max(specularFactor,0.0);
+		float dampedFactor = pow(specularFactor,shineDamper);
+		totalDiffuse += brightness * lightColour[i];
+		totalSpecular += dampedFactor * reflectivity * lightColour[i];
+	}
+	
+		totalDiffuse = max(totalDiffuse, 0.2);
 
-	out_Color =  vec4(diffuse,1.0) * totalCol + vec4(finalSpecular,1.0);
+	out_Color =  vec4(totalDiffuse,1.0) * totalCol + vec4(totalSpecular,1.0);
 
 }

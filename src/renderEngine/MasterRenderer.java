@@ -64,16 +64,16 @@ public class MasterRenderer {
 	}
 	
 	//render everything that needs to be rendered
-	public void render(Light sun,Camera camera){
+	public void render(List<Light> lights,Camera camera){
 		prepare();
 		shader.start();
-		shader.loadLight(sun);
+		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		shader.loadSkyCol(R, G, B);
 		renderer.render(entities);
 		shader.stop();
 		terrainShader.start();
-		terrainShader.loadLight(sun);
+		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
