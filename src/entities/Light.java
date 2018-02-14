@@ -7,13 +7,24 @@ public class Light {
 	//light vars
 	private Vector3f position;
 	private Vector3f colour;
+	private Vector3f attenuation = new Vector3f(1,0,0);
 	
 	//set vars on creation
 	public Light(Vector3f position, Vector3f colour) {
 		this.position = position;
 		this.colour = colour;
 	}
+	
+	public Light(Vector3f position, Vector3f colour, Vector3f attenuation) {
+		this.position = position;
+		this.colour = colour;
+		this.attenuation = attenuation;
+	}
 
+	public Vector3f getAttenuation(){
+		return attenuation;
+	}
+	
 	//getters and setters
 	public Vector3f getPosition() {
 		return position;

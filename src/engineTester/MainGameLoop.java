@@ -51,6 +51,8 @@ public class MainGameLoop {
 		ModelData treeData = OBJFileLoader.loadOBJ("tree");
 		ModelData fernData = OBJFileLoader.loadOBJ("fern");
 		ModelData playerData = OBJFileLoader.loadOBJ("person");
+		ModelData lampData = OBJFileLoader.loadOBJ("lamp");
+
 		
 		//create raw models here
 		RawModel model = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(),
@@ -59,13 +61,19 @@ public class MainGameLoop {
 				treeData.getNormals(), fernData.getIndices());
 		RawModel playerModel = loader.loadToVAO(playerData.getVertices(), playerData.getTextureCoords(),
 				playerData.getNormals(), playerData.getIndices());
+		RawModel lampModel = loader.loadToVAO(lampData.getVertices(), lampData.getTextureCoords(),
+				lampData.getNormals(), lampData.getIndices());
+		
+		
 
 		
 		//create textured models here
 		TexturedModel tree = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel fern = new TexturedModel(model3, fernTexAtlas);
 		TexturedModel player = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
+		TexturedModel lamp = new TexturedModel(lampModel, new ModelTexture(loader.loadTexture("lamp")));
 		
+		lamp.getTexture().setUseFakeLight(true);
 		float entityY = 0;
 		
 		//set transparancy here
@@ -117,11 +125,16 @@ public class MainGameLoop {
 			}
 		
 		//create lights here
-		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+		Light light = new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f));
+		Light light2 = new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
 		List<Light> lights = new ArrayList<Light>();
+		List<Light> allLights = new ArrayList<Light>();
 		
+		//order lights by distance from camera
 		lights.add(light);
-		lights.add(new Light(new Vector3f (-200,10,-200), new Vector3f(0,0,10)));
+		lights.add(light2);
+		
+		entities.add(new Entity(lamp, new Vector3f(185, terrain.getHeightOfTerrain(185, -293), -293),0,0,0,1));
 		//generate two terrain tiles
 
 		
@@ -172,5 +185,7 @@ public class MainGameLoop {
 
 	}
 
+	
+	
 }
 
