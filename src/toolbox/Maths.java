@@ -48,5 +48,16 @@ public class Maths {
 		return viewMatrix;
 	}
 	
+	
+	//need to fix this equation rotation affects the light toggle
+	public static float getDistance(Vector3f v1, Vector3f v2){
+		 float width = Math.abs(v1.x - v2.x);
+		  float height = Math.abs(v1.y - v2.y);
+		  float depth = Math.abs(v1.z - v2.z);
+		  
+		  float planeDistance = (float) Math.sqrt(width * width + height * height + depth*depth);
+		  return planeDistance;
+		  //return (float) Math.sqrt( planeDistance * planeDistance + depth * depth);
 
+	}
 }

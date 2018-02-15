@@ -25,11 +25,13 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TexturePack;
 import textures.Textures;
+import toolbox.Maths;
 
 public class MainGameLoop {
 
 	public static void main(String[] args) {
 		
+		List<Light>bigLights = new ArrayList<Light>();
 		//create the display and loader
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
@@ -52,6 +54,12 @@ public class MainGameLoop {
 		ModelData fernData = OBJFileLoader.loadOBJ("fern");
 		ModelData playerData = OBJFileLoader.loadOBJ("person");
 		ModelData lampData = OBJFileLoader.loadOBJ("lamp");
+		ModelData lampData2 = OBJFileLoader.loadOBJ("lamp");
+		ModelData lampData3 = OBJFileLoader.loadOBJ("lamp");
+		ModelData lampData4 = OBJFileLoader.loadOBJ("lamp");
+		ModelData lampData5 = OBJFileLoader.loadOBJ("lamp");
+
+
 
 		
 		//create raw models here
@@ -63,7 +71,7 @@ public class MainGameLoop {
 				playerData.getNormals(), playerData.getIndices());
 		RawModel lampModel = loader.loadToVAO(lampData.getVertices(), lampData.getTextureCoords(),
 				lampData.getNormals(), lampData.getIndices());
-		
+	
 		
 
 		
@@ -73,7 +81,6 @@ public class MainGameLoop {
 		TexturedModel player = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
 		TexturedModel lamp = new TexturedModel(lampModel, new ModelTexture(loader.loadTexture("lamp")));
 		
-		lamp.getTexture().setUseFakeLight(true);
 		float entityY = 0;
 		
 		//set transparancy here
@@ -84,13 +91,17 @@ public class MainGameLoop {
 		
 		//set fake lighting here
 		//grass.getTexture().setUseFakeLight(true);
+		lamp.getTexture().setUseFakeLight(true);
+		
+
+		
 		
 		//create a list of entities 
 		Player myPlayer = new Player(player, new Vector3f(100,0,-50),0,180,0,0.6f);
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
 		Terrain terrain = new Terrain(0,-1,loader,tp,blend,"heightmap");
-		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend, "heightMap");
+		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend, "heightmap");
 		
 		
 		//populate the list of entites
@@ -112,7 +123,7 @@ public class MainGameLoop {
 		
 		for(int i=0;i<300;i++){
 			
-			float x = random.nextFloat()*1600 - 400;
+			float x = random.nextFloat()* 1600 - 400;
 			float z = random.nextFloat() * -600;
 			
 			if(x > 800 || z > 800){
@@ -125,16 +136,40 @@ public class MainGameLoop {
 			}
 		
 		//create lights here
-		Light light = new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f));
+		Light sun = new Light(new Vector3f(0,1000,-7000),new Vector3f(1,1,1));
 		Light light2 = new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
-		List<Light> lights = new ArrayList<Light>();
-		List<Light> allLights = new ArrayList<Light>();
+		Light light3 = new Light(new Vector3f(200,10,-300),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
+		Light light4 = new Light(new Vector3f(100,20,-350),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
+		Light light5 = new Light(new Vector3f(175,20,-247),new Vector3f(0,2,0), new Vector3f(1,0.01f,0.002f));
+		Light light6 = new Light(new Vector3f(200,10,-203),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
+
+		
+		
+		
+		Light[] lights = new Light[5];
+		//List<Light> lights = new ArrayList<Light>();
+		//List<Light> allLights = new ArrayList<Light>();
 		
 		//order lights by distance from camera
-		lights.add(light);
-		lights.add(light2);
+		//lights.add(sun);
+		//lights.add(light2);
+		//lights.add(light3);
+
+		lights[0] = light5;
+		lights[1] = light6;
+		lights[2] = light3;
+		lights[3] = light4;
+		lights[4] = light2;
+		
+
 		
 		entities.add(new Entity(lamp, new Vector3f(185, terrain.getHeightOfTerrain(185, -293), -293),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(200, terrain.getHeightOfTerrain(200, -300), -300),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(100, terrain.getHeightOfTerrain(100, -350), -350),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(175, terrain.getHeightOfTerrain(175, -247), -247),0,0,0,1));
+		entities.add(new Entity(lamp, new Vector3f(200, terrain.getHeightOfTerrain(200, -203), -203),0,0,0,1));
+
+		
 		//generate two terrain tiles
 
 		
@@ -171,8 +206,11 @@ public class MainGameLoop {
 			for(Entity entity:entities){
 				renderer.processEntity(entity);
 			}
+			
 			//render everything
-			renderer.render(lights, camera);
+			bigLights = orderLights(lights, camera);
+			bigLights.add(sun);
+			renderer.render(bigLights, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
@@ -186,6 +224,29 @@ public class MainGameLoop {
 	}
 
 	
-	
+	public static List<Light>  orderLights(Light[] lights, Camera cam){
+		List<Light> orderedLight = new ArrayList<Light>();
+		
+		for(int i = lights.length - 1; i >=0; i--){
+			for(int j = 1;  j <= i; j++){
+				if(Maths.getDistance(cam.getPosition(), lights[j-1].getPosition()) >
+				Maths.getDistance(cam.getPosition(), lights[j].getPosition())){
+					
+					System.out.println(Maths.getDistance(cam.getPosition(), lights[j-1].getPosition()));
+					Light temp = lights[j-1];
+					lights[j-1] = lights[j];
+					lights[j] = temp;
+				}
+			}
+		}
+
+		orderedLight.add(0, lights[0]);
+		orderedLight.add(1, lights[1]);
+		orderedLight.add(2, lights[2]);
+
+
+
+		return orderedLight;
+	}
 }
 
