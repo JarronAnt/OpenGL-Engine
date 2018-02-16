@@ -55,9 +55,9 @@ public class Maths {
 		  float height = Math.abs(v1.y - v2.y);
 		  float depth = Math.abs(v1.z - v2.z);
 		  
-		  float planeDistance = (float) Math.sqrt(width * width + height * height + depth*depth);
-		  return planeDistance;
-		  //return (float) Math.sqrt( planeDistance * planeDistance + depth * depth);
+		 float planeDistance = (float) Math.sqrt(width * width + height * height );
+		  //return planeDistance;
+		  return (float) Math.sqrt( planeDistance * planeDistance + depth * depth);
 
 	}
 }
