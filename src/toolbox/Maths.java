@@ -1,10 +1,15 @@
 package toolbox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
+import entities.Light;
+import entities.Player;
 
 public class Maths {
 	
@@ -59,5 +64,27 @@ public class Maths {
 		  //return planeDistance;
 		  return (float) Math.sqrt( planeDistance * planeDistance + depth * depth);
 
+	}
+	
+	public static List<Light>  orderLights(Light[] lights, Player player){
+		List<Light> orderedLight = new ArrayList<Light>();
+		
+		for(int i = lights.length - 1; i >=0; i--){
+			for(int j = 1;  j <= i; j++){
+				if(Maths.getDistance(player.getPosition(), lights[j-1].getPosition()) >
+				Maths.getDistance(player.getPosition(), lights[j].getPosition())){
+					
+					Light temp = lights[j-1];
+					lights[j-1] = lights[j];
+					lights[j] = temp;
+				}
+			}
+		}
+
+		orderedLight.add(0, lights[0]);
+		orderedLight.add(1, lights[1]);
+		orderedLight.add(2, lights[2]);
+
+		return orderedLight;
 	}
 }

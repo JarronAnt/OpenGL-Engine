@@ -208,7 +208,7 @@ public class MainGameLoop {
 			}
 			
 			//render everything
-			bigLights = orderLights(lights, myPlayer);
+			bigLights = Maths.orderLights(lights, myPlayer);
 			bigLights.add(sun);
 			renderer.render(bigLights, camera);
 			guiRenderer.render(guis);
@@ -224,26 +224,5 @@ public class MainGameLoop {
 	}
 
 	
-	public static List<Light>  orderLights(Light[] lights, Player player){
-		List<Light> orderedLight = new ArrayList<Light>();
-		
-		for(int i = lights.length - 1; i >=0; i--){
-			for(int j = 1;  j <= i; j++){
-				if(Maths.getDistance(player.getPosition(), lights[j-1].getPosition()) >
-				Maths.getDistance(player.getPosition(), lights[j].getPosition())){
-					
-					Light temp = lights[j-1];
-					lights[j-1] = lights[j];
-					lights[j] = temp;
-				}
-			}
-		}
-
-		orderedLight.add(0, lights[0]);
-		orderedLight.add(1, lights[1]);
-		orderedLight.add(2, lights[2]);
-
-		return orderedLight;
-	}
 }
 
