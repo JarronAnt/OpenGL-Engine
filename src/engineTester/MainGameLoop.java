@@ -184,7 +184,7 @@ public class MainGameLoop {
 		//create a camera and renderer
 		Camera camera = new Camera(myPlayer);	
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		//create guis here
