@@ -10,6 +10,7 @@ import terrains.Terrain;
 public class Player extends Entity{
 	
 	private static final float RUN_SPEED = 20;
+	private static final float SPRINT_SPEED = 50;
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_HEIGHT = 30;
@@ -27,8 +28,12 @@ public class Player extends Entity{
 	}
 	
 	public void move(Terrain terrain){
+		
+		//get the input
 		checkKeyboardInput();
+		//turn the player
 		super.increaseRotation(0, currTurnSpeed * DisplayManager.getDelta(), 0);
+		//get the change in  distance and move the player 
 		float distance = currSpeed * DisplayManager.getDelta(); 
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
@@ -37,6 +42,7 @@ public class Player extends Entity{
 		super.increasePosition(dx, 0, dz);
 		super.increasePosition(0, upSpeed * DisplayManager.getDelta(), 0);
 		
+		//check if the player jumped and landed
 		float terrainHeight = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
 		if(super.getPosition().y <= terrainHeight){
 			upSpeed = 0;
@@ -50,6 +56,7 @@ public class Player extends Entity{
 		this.upSpeed = JUMP_HEIGHT;
 	}
 	
+	//pull for keyboard inputs
 	public void checkKeyboardInput(){
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)){
 			this.currSpeed = RUN_SPEED;

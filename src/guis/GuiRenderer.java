@@ -17,12 +17,14 @@ public class GuiRenderer {
 	private final RawModel quad;
 	private GuiShader shader;
 	
+	//load a quad to the vao
 	public GuiRenderer(Loader loader){
 		float pos[] = {-1,1,-1,-1,1,1,1,-1};
 		quad = loader.loadToVAO(pos);
 		shader = new GuiShader();
 	}
 
+	//render the quad
 	public void render(List<GuiTexture> texs){
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());

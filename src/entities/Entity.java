@@ -25,6 +25,7 @@ public class Entity {
 		this.scale = scale;
 	}
 	
+	//constructor for entities with texture atlas 
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale, int index) {
 		this.model = model;
@@ -36,11 +37,13 @@ public class Entity {
 		this.textureIndex = index;
 	}
 	
+	//find the texture on the atlas 
 	public float getTexXOffset(){
 		int column = textureIndex % model.getTexture().getNumRows();
 		return (float)column/(float)model.getTexture().getNumRows();
 	}
 	
+	//find the texture on the atlas
 	public float getTexYOffset(){
 		int row = textureIndex / model.getTexture().getNumRows();
 		return (float)row/(float)model.getTexture().getNumRows();

@@ -1,3 +1,16 @@
+/*Author: Jarron Anthonipillai
+ * Date Created: Febuary 2nd 2018
+ * Decription: This is a 3D game created using Java and LWJGL
+ * The project is based off of ThinMatrix's OpenGL tutorials
+ * 
+ * DISCLAIMER: All source code is property of Jarron Anthonipillai
+ * but as per liscensing agreement source code may be used for any purpose commercial or otherwise
+ * so long as proper credits are give to myself. 
+ * 
+ * 
+ */
+
+
 package engineTester;
 
 import java.util.ArrayList;
@@ -54,19 +67,13 @@ public class MainGameLoop {
 		ModelData fernData = OBJFileLoader.loadOBJ("fern");
 		ModelData playerData = OBJFileLoader.loadOBJ("person");
 		ModelData lampData = OBJFileLoader.loadOBJ("lamp");
-		ModelData lampData2 = OBJFileLoader.loadOBJ("lamp");
-		ModelData lampData3 = OBJFileLoader.loadOBJ("lamp");
-		ModelData lampData4 = OBJFileLoader.loadOBJ("lamp");
-		ModelData lampData5 = OBJFileLoader.loadOBJ("lamp");
 
 
-
-		
 		//create raw models here
 		RawModel model = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(),
 				treeData.getNormals(), treeData.getIndices());
 		RawModel model3 = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(),
-				treeData.getNormals(), fernData.getIndices());
+				fernData.getNormals(), fernData.getIndices());
 		RawModel playerModel = loader.loadToVAO(playerData.getVertices(), playerData.getTextureCoords(),
 				playerData.getNormals(), playerData.getIndices());
 		RawModel lampModel = loader.loadToVAO(lampData.getVertices(), lampData.getTextureCoords(),
@@ -136,7 +143,7 @@ public class MainGameLoop {
 			}
 		
 		//create lights here
-		Light sun = new Light(new Vector3f(0,1000,-7000),new Vector3f(1,1,1));
+		Light sun = new Light(new Vector3f(20000,20000,20000),new Vector3f(1,1,1));
 		Light light2 = new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
 		Light light3 = new Light(new Vector3f(200,10,-300),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
 		Light light4 = new Light(new Vector3f(100,20,-350),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
@@ -145,7 +152,7 @@ public class MainGameLoop {
 
 		
 		
-		
+		//array of lights
 		Light[] lights = new Light[5];
 		//List<Light> lights = new ArrayList<Light>();
 		//List<Light> allLights = new ArrayList<Light>();
@@ -154,7 +161,8 @@ public class MainGameLoop {
 		//lights.add(sun);
 		//lights.add(light2);
 		//lights.add(light3);
-
+		
+		//add lights to the array
 		lights[0] = light5;
 		lights[1] = light6;
 		lights[2] = light3;
@@ -182,6 +190,8 @@ public class MainGameLoop {
 		//create guis here
 		GuiTexture gui1 = new GuiTexture(loader.loadTexture("health"),new Vector2f(-0.5f,0.5f),
 				new Vector2f(0.25f,0.25f));
+		//add guis to the list
+		//any guis that can be drawn then undrawn will go in the game loop 
 		guis.add(gui1);
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
@@ -207,9 +217,11 @@ public class MainGameLoop {
 				renderer.processEntity(entity);
 			}
 			
-			//render everything
+			//get the ordered lights and add the sun to the list of lights so that its always active
 			bigLights = Maths.orderLights(lights, myPlayer);
 			bigLights.add(sun);
+			//render everything
+
 			renderer.render(bigLights, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();

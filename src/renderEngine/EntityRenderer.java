@@ -45,7 +45,7 @@ public class EntityRenderer {
 		}
 	}
 	
-	//to all the vao setup for the entities
+	//do all the vao setup for the entities
 	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());

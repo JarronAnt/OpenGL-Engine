@@ -32,15 +32,16 @@ public class Camera {
 		this.yaw = 180 - (player.getRotY() + horizontalAngle);
 	}
 	
+	//calcualte the cameras position in the world
 	private void calcCamPos(float hDistance, float vDistance){
 	
-		
+		//get the angle between the player and the camera
 		float theta = player.getRotY() + horizontalAngle;
 		float xOffset = (float) (hDistance * Math.sin(Math.toRadians(theta)));
 		float zOffset = (float) (hDistance * Math.cos(Math.toRadians(theta)));
 		
 
-		
+		//set the pos relative to player
 		position.x = player.getPosition().x - xOffset; 
 		position.y = player.getPosition().y + vDistance;
 		if(position.y < 0){
@@ -84,12 +85,14 @@ public class Camera {
 
 	}
 	
+	//calculate the pitch 
 	private void calcPitch(){
 		if(Mouse.isButtonDown(2)){
 			float pitchChange = Mouse.getDY() * 0.1f;
 			pitch -= pitchChange;
 		}
 	}
+	
 	
 	private void calcAngle(){
 		if(Mouse.isButtonDown(1)){

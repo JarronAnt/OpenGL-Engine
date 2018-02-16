@@ -54,8 +54,8 @@ public class Maths {
 	}
 	
 	
-	//need to fix this equation rotation affects the light toggle
 	public static float getDistance(Vector3f v1, Vector3f v2){
+		
 		 float width = Math.abs(v1.x - v2.x);
 		  float height = Math.abs(v1.y - v2.y);
 		  float depth = Math.abs(v1.z - v2.z);
@@ -81,6 +81,7 @@ public class Maths {
 			}
 		}
 
+		//turn this into a loop when i add more lights
 		orderedLight.add(0, lights[0]);
 		orderedLight.add(1, lights[1]);
 		orderedLight.add(2, lights[2]);
