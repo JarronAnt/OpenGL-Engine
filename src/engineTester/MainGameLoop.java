@@ -107,8 +107,12 @@ public class MainGameLoop {
 		Player myPlayer = new Player(player, new Vector3f(100,0,-50),0,180,0,0.6f);
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
+		
 		Terrain terrain = new Terrain(0,-1,loader,tp,blend,"heightmap");
 		Terrain terrain2 = new Terrain(1,-1,loader,tp, blend, "heightmap");
+		List<Terrain> terrains = new ArrayList<Terrain>();
+		terrains.add(terrain);
+		terrains.add(terrain2);
 		
 		
 		//populate the list of entites
@@ -196,6 +200,7 @@ public class MainGameLoop {
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
+		entities.add(myPlayer);
 		//main game loop
 		while(!Display.isCloseRequested()){
 			//pull for cam movement
@@ -207,22 +212,12 @@ public class MainGameLoop {
 			}else{
 				myPlayer.move(terrain);	
 			}
-			//process the terrain
-			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
-			//processPlayer
-			renderer.processEntity(myPlayer);
-			//process each entity in the list
-			for(Entity entity:entities){
-				renderer.processEntity(entity);
-			}
-			
 			//get the ordered lights and add the sun to the list of lights so that its always active
 			bigLights = Maths.orderLights(lights, myPlayer);
 			bigLights.add(sun);
 			//render everything
 
-			renderer.render(bigLights, camera);
+			renderer.renderScene(entities, terrains, bigLights, camera);;
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}

@@ -91,6 +91,17 @@ public class MasterRenderer {
 		terrains.add(terrain);
 	}
 	
+	public void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera cam){
+		for(Terrain t : terrains){
+			processTerrain(t);
+		}
+		for(Entity e : entities){
+			processEntity(e);
+		}
+		
+		render(lights, cam);
+	}
+	
 	//add entities to be batch rendered
 	public void processEntity(Entity entity){
 		TexturedModel entityModel = entity.getModel();
