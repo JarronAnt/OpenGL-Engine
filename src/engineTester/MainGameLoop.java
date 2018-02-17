@@ -39,6 +39,7 @@ import textures.ModelTexture;
 import textures.TexturePack;
 import textures.Textures;
 import toolbox.Maths;
+import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
@@ -152,10 +153,10 @@ public class MainGameLoop {
 		//create lights here
 		Light sun = new Light(new Vector3f(20000,20000,20000),new Vector3f(1,1,1));
 		Light light2 = new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
-		Light light3 = new Light(new Vector3f(200,10,-300),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
-		Light light4 = new Light(new Vector3f(100,20,-350),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
-		Light light5 = new Light(new Vector3f(175,20,-247),new Vector3f(0,2,0), new Vector3f(1,0.01f,0.002f));
-		Light light6 = new Light(new Vector3f(200,10,-203),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f));
+		Light light3 = new Light(new Vector3f(200,10,-300),new Vector3f(2,0,2), new Vector3f(1,0.01f,0.002f));
+		Light light4 = new Light(new Vector3f(100,20,-350),new Vector3f(0,2,0), new Vector3f(1,0.01f,0.002f));
+		Light light5 = new Light(new Vector3f(175,20,-247),new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f));
+		Light light6 = new Light(new Vector3f(200,10,-203),new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f));
 
 		
 		
@@ -205,7 +206,14 @@ public class MainGameLoop {
 		WaterShader wShader = new WaterShader();
 		WaterRenderer waterRenderer  = new WaterRenderer(loader,wShader,renderer.getProjectionMatrix());
 		List<WaterTile>waters = new ArrayList<WaterTile>();
-		waters.add(new WaterTile(75,-95,-5));
+		waters.add(new WaterTile(75,-100,-4));
+		
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		
+		
+		//FBO gui
+		//GuiTexture gui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f,0.5f), new Vector2f(0.5f,0.5f));
+		//guis.add(gui);
 		
 		//main game loop
 		while(!Display.isCloseRequested()){
@@ -221,8 +229,12 @@ public class MainGameLoop {
 			//get the ordered lights and add the sun to the list of lights so that its always active
 			bigLights = Maths.orderLights(lights, myPlayer);
 			bigLights.add(sun);
+			
+			fbos.bindReflectionFrameBuffer();
+			renderer.renderScene(entities, terrains, bigLights, camera);
+			fbos.unbindCurrentFrameBuffer();
+			
 			//render everything
-
 			renderer.renderScene(entities, terrains, bigLights, camera);
 			waterRenderer.render(waters, camera);
 			guiRenderer.render(guis);
@@ -235,6 +247,7 @@ public class MainGameLoop {
 		}
 		
 		//clean
+		fbos.cleanUp();
 		guiRenderer.cleanUp();
 		wShader.cleanUp();
 		renderer.cleanUp();
