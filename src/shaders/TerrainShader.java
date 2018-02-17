@@ -30,6 +30,8 @@ public class TerrainShader extends ShaderProgram{
 	private int location_bTex;
 	private int location_blendTex;
 	private int location_attenuation[];
+	private int location_skyCol;
+
 
 
 	public TerrainShader() {
@@ -55,7 +57,8 @@ public class TerrainShader extends ShaderProgram{
 		location_gTex = super.getUniformLocation("gTex");;
 		location_bTex = super.getUniformLocation("bTex");;
 		location_blendTex = super.getUniformLocation("blendMap");
-		
+		location_skyCol = super.getUniformLocation("skyCol");
+
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
 		location_attenuation = new int[MAX_LIGHTS];
@@ -78,6 +81,11 @@ public class TerrainShader extends ShaderProgram{
 		super.loadInt(location_bTex, 3);
 		super.loadInt(location_blendTex, 4);
 
+	}
+	
+	public void loadSkyCol(float r, float g, float b){
+		Vector3f skyCol = new Vector3f(r,g,b);
+		super.loadVector(location_skyCol, skyCol);
 	}
 	
 	public void loadShineVariables(float damper,float reflectivity){

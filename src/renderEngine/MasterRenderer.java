@@ -78,9 +78,10 @@ public class MasterRenderer {
 		terrainShader.start();
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
+		terrainShader.loadSkyCol(R, G, B);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
-		skyboxRenderer.render(camera);
+		skyboxRenderer.render(camera, R, G, B);
 		terrains.clear();
 		entities.clear();
 	}

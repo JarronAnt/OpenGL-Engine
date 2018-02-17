@@ -4,6 +4,7 @@ in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
 in vec3 toLightVector[4];
 in vec3 toCameraVector;
+in float visibility;
 
 out vec4 out_Color;
 
@@ -12,6 +13,7 @@ uniform sampler2D rTex;
 uniform sampler2D gTex;
 uniform sampler2D bTex;
 uniform sampler2D blendMap;
+uniform vec3 skyCol;
 
 
 uniform vec3 lightColour[4];
@@ -58,5 +60,5 @@ void main(void){
 		totalDiffuse = max(totalDiffuse, 0.2);
 
 	out_Color =  vec4(totalDiffuse,1.0) * totalCol + vec4(totalSpecular,1.0);
-
+	out_Color = mix(vec4(skyCol,1.0), out_Color, visibility);
 }
