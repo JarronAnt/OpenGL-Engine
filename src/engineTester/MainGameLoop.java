@@ -39,6 +39,9 @@ import textures.ModelTexture;
 import textures.TexturePack;
 import textures.Textures;
 import toolbox.Maths;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 public class MainGameLoop {
 
@@ -180,6 +183,7 @@ public class MainGameLoop {
 		entities.add(new Entity(lamp, new Vector3f(100, terrain.getHeightOfTerrain(100, -350), -350),0,0,0,1));
 		entities.add(new Entity(lamp, new Vector3f(175, terrain.getHeightOfTerrain(175, -247), -247),0,0,0,1));
 		entities.add(new Entity(lamp, new Vector3f(200, terrain.getHeightOfTerrain(200, -203), -203),0,0,0,1));
+		entities.add(myPlayer);
 
 		
 		//generate two terrain tiles
@@ -194,13 +198,15 @@ public class MainGameLoop {
 		//create guis here
 		GuiTexture gui1 = new GuiTexture(loader.loadTexture("health"),new Vector2f(-0.5f,0.5f),
 				new Vector2f(0.25f,0.25f));
-		//add guis to the list
-		//any guis that can be drawn then undrawn will go in the game loop 
 		guis.add(gui1);
-		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
-		entities.add(myPlayer);
+		
+		WaterShader wShader = new WaterShader();
+		WaterRenderer waterRenderer  = new WaterRenderer(loader,wShader,renderer.getProjectionMatrix());
+		List<WaterTile>waters = new ArrayList<WaterTile>();
+		waters.add(new WaterTile(75,-95,-5));
+		
 		//main game loop
 		while(!Display.isCloseRequested()){
 			//pull for cam movement
@@ -217,13 +223,20 @@ public class MainGameLoop {
 			bigLights.add(sun);
 			//render everything
 
-			renderer.renderScene(entities, terrains, bigLights, camera);;
+			renderer.renderScene(entities, terrains, bigLights, camera);
+			waterRenderer.render(waters, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
+			//System.out.println("X:"+myPlayer.getPosition().x);
+			//System.out.println("Y:"+myPlayer.getPosition().y);
+			//System.out.println("Z:"+myPlayer.getPosition().z);
+
+
 		}
 		
 		//clean
 		guiRenderer.cleanUp();
+		wShader.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
