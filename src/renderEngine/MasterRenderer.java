@@ -8,6 +8,7 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -67,15 +68,17 @@ public class MasterRenderer {
 	}
 	
 	//render everything that needs to be rendered
-	public void render(List<Light> lights,Camera camera){
+	public void render(List<Light> lights,Camera camera, Vector4f clipPlane){
 		prepare();
 		shader.start();
+		shader.loadClipPlane(clipPlane);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		shader.loadSkyCol(R, G, B);
 		renderer.render(entities);
 		shader.stop();
 		terrainShader.start();
+		terrainShader.loadClipPlane(clipPlane);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainShader.loadSkyCol(R, G, B);
@@ -91,7 +94,7 @@ public class MasterRenderer {
 		terrains.add(terrain);
 	}
 	
-	public void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera cam){
+	public void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera cam, Vector4f clipPlane){
 		for(Terrain t : terrains){
 			processTerrain(t);
 		}
@@ -99,7 +102,7 @@ public class MasterRenderer {
 			processEntity(e);
 		}
 		
-		render(lights, cam);
+		render(lights, cam, clipPlane);
 	}
 	
 	//add entities to be batch rendered

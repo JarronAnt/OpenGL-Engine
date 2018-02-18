@@ -21,6 +21,9 @@ public class Camera {
 		this.player = player;
 	}
 	
+	public void invertPitch(){
+		this.pitch = -pitch;
+	}
 	//move the cam
 	public void move(){
 		calcZoom();

@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
@@ -206,14 +208,17 @@ public class MainGameLoop {
 		WaterShader wShader = new WaterShader();
 		WaterRenderer waterRenderer  = new WaterRenderer(loader,wShader,renderer.getProjectionMatrix());
 		List<WaterTile>waters = new ArrayList<WaterTile>();
-		waters.add(new WaterTile(75,-100,-4));
+		WaterTile water1 = new WaterTile(75,-100,-4);
+		waters.add(water1);
 		
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		
 		
 		//FBO gui
-		//GuiTexture gui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f,0.5f), new Vector2f(0.5f,0.5f));
-		//guis.add(gui);
+		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		guis.add(reflection);
+		guis.add(refraction);
 		
 		//main game loop
 		while(!Display.isCloseRequested()){
@@ -226,16 +231,33 @@ public class MainGameLoop {
 			}else{
 				myPlayer.move(terrain);	
 			}
+			
+			GL11.glEnable(GL11.GL_CLIP_PLANE0);
+			
+			
 			//get the ordered lights and add the sun to the list of lights so that its always active
 			bigLights = Maths.orderLights(lights, myPlayer);
 			bigLights.add(sun);
 			
+			//render reflection
 			fbos.bindReflectionFrameBuffer();
-			renderer.renderScene(entities, terrains, bigLights, camera);
-			fbos.unbindCurrentFrameBuffer();
+			float distance = 2 * (camera.getPosition().y - water1.getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			renderer.renderScene(entities, terrains, bigLights, camera, new Vector4f(0,1,0, -water1.getHeight()));
+			camera.getPosition().y += distance;
+			camera.invertPitch();
+
 			
-			//render everything
-			renderer.renderScene(entities, terrains, bigLights, camera);
+			//render refraction
+			fbos.bindRefractionFrameBuffer();
+			renderer.renderScene(entities, terrains, bigLights, camera, new Vector4f(0,-1,0, water1.getHeight()));
+			
+			
+			
+			//render to screen
+			fbos.unbindCurrentFrameBuffer();
+			renderer.renderScene(entities, terrains, bigLights, camera,new Vector4f(0,0,0,0));
 			waterRenderer.render(waters, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
