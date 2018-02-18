@@ -205,20 +205,14 @@ public class MainGameLoop {
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
 		
+		
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		WaterShader wShader = new WaterShader();
-		WaterRenderer waterRenderer  = new WaterRenderer(loader,wShader,renderer.getProjectionMatrix());
+		WaterRenderer waterRenderer  = new WaterRenderer(loader,wShader,renderer.getProjectionMatrix(),fbos);
 		List<WaterTile>waters = new ArrayList<WaterTile>();
 		WaterTile water1 = new WaterTile(75,-100,-4);
 		waters.add(water1);
 		
-		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		
-		
-		//FBO gui
-		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f,0.5f), new Vector2f(0.25f,0.25f));
-		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
-		guis.add(reflection);
-		guis.add(refraction);
 		
 		//main game loop
 		while(!Display.isCloseRequested()){
